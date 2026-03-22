@@ -1,0 +1,36 @@
+-- 1. Crear la base de datos
+CREATE DATABASE IF NOT EXISTS red_social_cenfotec;
+USE red_social_cenfotec;
+
+-- 2. Tabla de Usuarios
+-- Almacena los datos básicos, el avatar y el grupo (Requisito 2 de la consigna)
+CREATE TABLE IF NOT EXISTS usuarios (
+    username VARCHAR(50) PRIMARY KEY,
+    password VARCHAR(255) NOT NULL,
+    nombre VARCHAR(100) NOT NULL,
+    apellido1 VARCHAR(100) NOT NULL,
+    apellido2 VARCHAR(100),
+    fecha_nacimiento DATE NOT NULL,
+    avatar VARCHAR(100) DEFAULT 'default.png',
+    nombre_grupo VARCHAR(50) DEFAULT 'Ninguno',
+    color_grupo VARCHAR(7) DEFAULT '#FFFFFF' -- Formato Hexadecimal para Java Color.decode()
+);
+
+-- 3. Tabla de Amistades (Representación de las Aristas del Grafo)
+-- Representa la relación Muchos a Muchos entre usuarios.
+CREATE TABLE IF NOT EXISTS amistades (
+    usuario_origen VARCHAR(50),
+    usuario_destino VARCHAR(50),
+    fecha_conexion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (usuario_origen, usuario_destino),
+    FOREIGN KEY (usuario_origen) REFERENCES usuarios(username) ON DELETE CASCADE,
+    FOREIGN KEY (usuario_destino) REFERENCES usuarios(username) ON DELETE CASCADE
+);
+
+-- 4. Tabla de Intereses
+CREATE TABLE IF NOT EXISTS intereses (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50),
+    interes VARCHAR(100),
+    FOREIGN KEY (username) REFERENCES usuarios(username) ON DELETE CASCADE
+);

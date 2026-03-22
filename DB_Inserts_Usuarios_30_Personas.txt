@@ -1,0 +1,60 @@
+USE red_social_cenfotec;
+
+INSERT INTO usuarios (username, password, nombre, apellido1, apellido2, fecha_nacimiento, avatar, nombre_grupo, color_grupo) VALUES
+-- GRUPO VERDE (Estudiantes) - Color #2ecc71
+('marco01', '1234', 'Marco', 'Arias', 'Solis', '2000-05-15', 'masculino.png', 'Verde', '#2ecc71'),
+('jos02', '1234', 'Joselyn', 'Mora', 'Castro', '1998-10-20', 'femenino.png', 'Verde', '#2ecc71'),
+('ana_v', '1234', 'Ana', 'Villalobos', 'Ruiz', '2001-03-12', 'femenino.png', 'Verde', '#2ecc71'),
+('luis_f', '1234', 'Luis', 'Fernandez', 'Gomez', '1999-07-25', 'masculino.png', 'Verde', '#2ecc71'),
+('carla_m', '1234', 'Carla', 'Mendez', 'Soto', '2002-01-30', 'femenino.png', 'Verde', '#2ecc71'),
+('diego_r', '1234', 'Diego', 'Rojas', 'Madrigal', '2000-11-05', 'masculino.png', 'Verde', '#2ecc71'),
+('sofia_l', '1234', 'Sofia', 'Lopez', 'Marin', '2001-06-18', 'femenino.png', 'Verde', '#2ecc71'),
+('raul_g', '1234', 'Raul', 'Guevara', 'Chaves', '1997-09-09', 'masculino.png', 'Verde', '#2ecc71'),
+('elena_p', '1234', 'Elena', 'Pinto', 'Sandoval', '2003-04-22', 'femenino.png', 'Verde', '#2ecc71'),
+('bryan_s', '1234', 'Bryan', 'Salas', 'Miranda', '1998-12-12', 'masculino.png', 'Verde', '#2ecc71'),
+
+-- GRUPO AZUL (Tecnología) - Color #3498db
+('pedro_p', '1234', 'Pedro', 'Perez', 'Vargas', '1995-02-10', 'default.png', 'Azul', '#3498db'),
+('marta_h', '1234', 'Marta', 'Herrera', 'Blanco', '1992-08-14', 'femenino.png', 'Azul', '#3498db'),
+('victor_m', '1234', 'Victor', 'Murillo', 'Quesada', '1990-05-30', 'masculino.png', 'Azul', '#3498db'),
+('lucia_q', '1234', 'Lucia', 'Quirós', 'Alfaro', '1994-11-11', 'femenino.png', 'Azul', '#3498db'),
+('andres_c', '1234', 'Andres', 'Calderon', 'Ureña', '1993-03-03', 'masculino.png', 'Azul', '#3498db'),
+('moni_f', '1234', 'Monica', 'Fonseca', 'Prado', '1996-06-20', 'femenino.png', 'Azul', '#3498db'),
+('jose_d', '1234', 'Jose', 'Delgado', 'Vega', '1991-09-15', 'masculino.png', 'Azul', '#3498db'),
+('valeria_s', '1234', 'Valeria', 'Solano', 'Leitón', '1995-12-01', 'femenino.png', 'Azul', '#3498db'),
+('fabian_z', '1234', 'Fabian', 'Zamora', 'Meza', '1990-01-10', 'masculino.png', 'Azul', '#3498db'),
+('gabriel_x', '1234', 'Gabriel', 'Xirinach', 'Campos', '1994-04-04', 'masculino.png', 'Azul', '#3498db'),
+
+-- GRUPO ROJO (Deportes) - Color #e74c3c
+('kattia_j', '1234', 'Kattia', 'Jimenez', 'Oreamuno', '1988-10-10', 'femenino.png', 'Rojo', '#e74c3c'),
+('oscar_u', '1234', 'Oscar', 'Ugalde', 'Arrieta', '1985-05-05', 'masculino.png', 'Rojo', '#e74c3c'),
+('sandra_t', '1234', 'Sandra', 'Torres', 'Bustos', '1987-03-15', 'femenino.png', 'Rojo', '#e74c3c'),
+('pablo_k', '1234', 'Pablo', 'Koper', 'Sánchez', '1989-11-20', 'masculino.png', 'Rojo', '#e74c3c'),
+('rebeca_w', '1234', 'Rebeca', 'Wong', 'Li', '1990-08-08', 'femenino.png', 'Rojo', '#e74c3c'),
+('isaac_n', '1234', 'Isaac', 'Newton', 'Cerdas', '1986-12-25', 'masculino.png', 'Rojo', '#e74c3c'),
+('fanny_o', '1234', 'Fanny', 'Obando', 'Díaz', '1991-02-28', 'femenino.png', 'Rojo', '#e74c3c'),
+('hugo_v', '1234', 'Hugo', 'Viquez', 'Araya', '1984-06-14', 'masculino.png', 'Rojo', '#e74c3c'),
+('tania_m', '1234', 'Tania', 'Monge', 'Badilla', '1993-07-07', 'femenino.png', 'Rojo', '#e74c3c'),
+('esteban_q', '1234', 'Esteban', 'Quintero', 'Mora', '1982-09-30', 'masculino.png', 'Rojo', '#e74c3c');
+
+INSERT INTO amistades (usuario_origen, usuario_destino) VALUES
+-- Conexiones Grupo Verde
+('marco01', 'jos02'), ('marco01', 'luis_f'), ('jos02', 'ana_v'), ('ana_v', 'carla_m'),
+('luis_f', 'diego_r'), ('diego_r', 'sofia_l'), ('sofia_l', 'raul_g'), ('raul_g', 'elena_p'),
+('elena_p', 'bryan_s'), ('bryan_s', 'marco01'),
+
+-- Conexiones Grupo Azul
+('pedro_p', 'marta_h'), ('pedro_p', 'victor_m'), ('marta_h', 'lucia_q'), ('victor_m', 'andres_c'),
+('lucia_q', 'moni_f'), ('andres_c', 'jose_d'), ('moni_f', 'valeria_s'), ('jose_d', 'fabian_z'),
+('valeria_s', 'gabriel_x'), ('gabriel_x', 'pedro_p'),
+
+-- Conexiones Grupo Rojo
+('kattia_j', 'oscar_u'), ('kattia_j', 'sandra_t'), ('oscar_u', 'pablo_k'), ('sandra_t', 'rebeca_w'),
+('pablo_k', 'isaac_n'), ('rebeca_w', 'fanny_o'), ('isaac_n', 'hugo_v'), ('fanny_o', 'tania_m'),
+('hugo_v', 'esteban_q'), ('esteban_q', 'kattia_j'),
+
+-- Conexiones Inter-Grupo (Puentes para que el grafo sea conexo)
+('marco01', 'pedro_p'), -- Une Verde con Azul
+('pedro_p', 'kattia_j'), -- Une Azul con Rojo
+('raul_g', 'oscar_u'),  -- Une Verde con Rojo
+('ana_v', 'moni_f');    -- Puente extra
