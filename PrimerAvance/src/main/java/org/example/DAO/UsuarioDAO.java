@@ -90,6 +90,69 @@ public class UsuarioDAO {
         return lista;
     }
 
+    /**
+     * Guarda una nueva relación de amistad en la base de datos.
+     */
+    public void guardarAmistad(String user1, String user2) {
+        // Usamos INSERT IGNORE para evitar errores si la relación ya existe
+        String sql = "INSERT IGNORE INTO amistades (usuario_origen, usuario_destino) VALUES (?, ?)";
+
+        try (Connection conn = ConexionDB.getConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, user1);
+            ps.setString(2, user2);
+            ps.executeUpdate();
+
+            System.out.println("✅ DB: Amistad guardada entre " + user1 + " y " + user2);
+        } catch (SQLException e) {
+            System.err.println("❌ Error DB al guardar amistad: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Actualiza la contraseña de un usuario existente en la base de datos.
+     */
+    public void actualizarPassword(Usuario u) {
+        String sql = "UPDATE usuarios SET password = ? WHERE username = ?";
+
+        try (Connection conn = ConexionDB.getConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, u.getPassword());
+            ps.setString(2, u.getUsername());
+            ps.executeUpdate();
+
+            System.out.println("✅ DB: Contraseña actualizada para el usuario: " + u.getUsername());
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error DB al actualizar contraseña: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Elimina una relación de amistad de la base de datos.
+     * Busca en ambos sentidos para asegurar que se borre la conexión simétrica.
+     */
+    public void eliminarAmistad(String user1, String user2) {
+        String sql = "DELETE FROM amistades WHERE (usuario_origen = ? AND usuario_destino = ?) " +
+                "OR (usuario_origen = ? AND usuario_destino = ?)";
+
+        try (Connection conn = ConexionDB.getConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, user1);
+            ps.setString(2, user2);
+            ps.setString(3, user2);
+            ps.setString(4, user1);
+            ps.executeUpdate();
+
+            System.out.println("🗑️ DB: Amistad eliminada entre " + user1 + " y " + user2);
+        } catch (SQLException e) {
+            System.err.println("❌ Error DB al eliminar amistad: " + e.getMessage());
+        }
+    }
+
     // Método privado para evitar repetir código de mapeo
     private Usuario mapearUsuario(ResultSet rs) throws SQLException {
         return new Usuario(

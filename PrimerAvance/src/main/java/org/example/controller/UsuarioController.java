@@ -12,9 +12,9 @@ public class UsuarioController {
 
     private final UsuarioDAO usuarioDAO;
     private final RedSocialService service;
-    private final InteresDAO interesDAO; // <--- Agregado para persistencia de intereses
+    private final InteresDAO interesDAO;
 
-    // Actualizamos el constructor para recibir el InteresDAO
+
     public UsuarioController(UsuarioDAO dao, RedSocialService service, InteresDAO interesDAO) {
         this.usuarioDAO = dao;
         this.service = service;
@@ -100,7 +100,71 @@ public class UsuarioController {
         }
     }
 
+    /**
+     * Crea una relación de amistad en DB y en el Grafo (Service)
+     */
+    public void agregarAmistad(Usuario u1, Usuario u2) {
+        if (u1 == null || u2 == null) return;
+
+        try {
+            // 1. Guardar en la tabla relacional de MySQL (DAO)
+            usuarioDAO.guardarAmistad(u1.getUsername(), u2.getUsername());
+
+            // 2. Reflejar en la estructura de datos en memoria (Service/Grafo)
+            service.conectarUsuarios(u1, u2);
+
+            System.out.println("✅ Amistad establecida entre " + u1.getUsername() + " y " + u2.getUsername());
+        } catch (Exception e) {
+            System.err.println("❌ Error al agregar amistad: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Elimina la relación de amistad en DB y en el Grafo
+     */
+    public void eliminarAmistad(Usuario u1, Usuario u2) {
+        if (u1 == null || u2 == null) return;
+
+        try {
+            // 1. Eliminar de MySQL
+            usuarioDAO.eliminarAmistad(u1.getUsername(), u2.getUsername());
+
+            // 2. Romper la conexión en el Grafo (Service)
+            service.desconectarUsuarios(u1, u2);
+
+            System.out.println("🗑️ Amistad eliminada entre " + u1.getUsername() + " y " + u2.getUsername());
+        } catch (Exception e) {
+            System.err.println("❌ Error al eliminar amistad: " + e.getMessage());
+        }
+    }
+
+    public List<Usuario> obtenerSugerenciasAmistad(Usuario usuario) {
+        return service.recomendarPorIntereses(usuario);
+    }
+
     public Usuario buscar(String username) {
-        return usuarioDAO.buscarPorUsername(username);
+        // 1. Buscamos los datos básicos del usuario
+        Usuario u = usuarioDAO.buscarPorUsername(username);
+
+        // 2. Si el usuario existe, cargamos sus intereses desde la DB
+        if (u != null) {
+            List<String> interesesDesdeDB = interesDAO.obtenerInteresesUsuario(username);
+            u.setIntereses(interesesDesdeDB);
+            System.out.println("✅ Intereses cargados para " + username + ": " + interesesDesdeDB);
+        }
+
+        return u;
+    }
+
+    public void cargarInteresesDelUsuario(Usuario usuario) {
+        if (usuario != null) {
+            // Consultamos al DAO por la lista real de la base de datos
+            List<String> desdeDB = interesDAO.obtenerInteresesUsuario(usuario.getUsername());
+
+            // Limpiamos los intereses actuales del objeto y cargamos los de la DB
+            usuario.setIntereses(desdeDB);
+
+            System.out.println("DEBUG: Intereses cargados para " + usuario.getUsername() + ": " + desdeDB.size());
+        }
     }
 }

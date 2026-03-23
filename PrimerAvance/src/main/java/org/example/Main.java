@@ -8,7 +8,6 @@ import org.example.model.Grafo;
 import org.example.service.AuthService;
 import org.example.service.RedSocialService;
 import org.example.view.NavigationManager;
-// Importa tu clase de conexión
 import org.example.database.ConexionDB;
 
 import javax.swing.*;
@@ -25,8 +24,7 @@ public class Main {
 
                 // 2. Persistencia (DAOs)
                 UsuarioDAO usuarioDAO = new UsuarioDAO();
-                // Pasamos la conexión al InteresDAO para las consultas de catálogo
-                InteresDAO interesDAO = new InteresDAO(conn);
+                InteresDAO interesDAO = new InteresDAO();
 
                 // 3. Estructura de Datos (Grafo)
                 Grafo grafo = new Grafo();

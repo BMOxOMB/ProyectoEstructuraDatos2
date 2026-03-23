@@ -55,6 +55,11 @@ public class Grafo {
         return adjList;
     }
 
+    public List<Usuario> getTodosLosUsuarios() {
+        // Retornamos todas las llaves del mapa como una lista
+        return new ArrayList<>(adjList.keySet());
+    }
+
     // Método útil para validar si un usuario ya existe por su username
     public Usuario buscarPorUsername(String username) {
         return adjList.keySet().stream()

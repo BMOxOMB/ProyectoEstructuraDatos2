@@ -12,9 +12,9 @@ public class NavigationManager {
     private final JFrame frame;
     private final AuthController authController;
     private final UsuarioController usuarioController;
-    private final UsuarioDAO usuarioDAO; // Agregado para cargar la DB
+    private final UsuarioDAO usuarioDAO;
     private final Grafo grafo;
-    private Usuario usuarioLogueado; // Para saber quién está en la sesión
+    private Usuario usuarioLogueado;
 
     public NavigationManager(JFrame frame, AuthController auth, UsuarioController usuario, UsuarioDAO dao, Grafo grafo) {
         this.frame = frame;
@@ -35,20 +35,19 @@ public class NavigationManager {
 
     // --- Navegación ---
     public void goToLogin() {
-        this.usuarioLogueado = null; // Limpiar sesión al salir
+        this.usuarioLogueado = null;
         changeView(new LoginView(this, authController, grafo));
     }
 
     public void goToPerfil(Usuario usuario) {
-        // Creamos la nueva vista pasando las dependencias necesarias
-        PerfilView perfilView = new PerfilView(this, usuario, usuarioController);
+        // Al entrar al perfil, cargamos los intereses frescos de la DB
+        usuarioController.cargarInteresesDelUsuario(usuario);
+        changeView(new PerfilView(this, usuario, usuarioController));
+    }
 
-        // Intercambiamos el contenido del frame
-        frame.setContentPane(perfilView);
-
-        // Forzamos a Swing a redibujar la interfaz para evitar "fantasmas"
-        frame.revalidate();
-        frame.repaint();
+    public void goToAmistades() {
+        // Pasamos el grafo completo y el controlador para gestionar las relaciones
+        changeView(new AmistadesView(this, grafo, usuarioController));
     }
 
     public void goToRegistro() {
@@ -60,32 +59,40 @@ public class NavigationManager {
     }
 
     public void goToDashboard() {
+        // Sincronizamos el grafo antes de entrar para ver cambios recientes
+        prepararGrafo();
         changeView(new DashboardView(this, grafo, usuarioController));
     }
 
-
+    /**
+     * Sincroniza la estructura del Grafo en memoria con la Base de Datos.
+     */
     public void prepararGrafo() {
-        // 1. Limpiar el grafo actual para evitar duplicados en memoria
+        // 1. Limpiar para evitar duplicados visuales
         this.grafo.getAdjList().clear();
 
-        // 2. Obtener usuarios de la DB
+        // 2. Cargar todos los nodos (Usuarios)
         List<Usuario> desdeDB = usuarioDAO.obtenerTodos();
-
-        // 3. Insertar nodos en la estructura de Red
         for (Usuario u : desdeDB) {
             this.grafo.agregarUsuario(u);
         }
 
-        // 4. Cargar las aristas (Amistades) desde la tabla relacional
-        // Nota: Asegúrate que tu UsuarioDAO tenga este método implementado
+        // 3. Cargar todas las aristas (Relaciones de Amistad)
         usuarioDAO.cargarAmistadesEnGrafo(this.grafo);
 
-        System.out.println("✅ Estructura de Red sincronizada: " + desdeDB.size() + " usuarios cargados.");
+        System.out.println("✅ Red sincronizada: " + desdeDB.size() + " nodos listos.");
     }
 
+    /**
+     * Método centralizado para cambiar de pantalla con limpieza de UI.
+     */
     private void changeView(JPanel panel) {
         frame.setContentPane(panel);
         frame.revalidate();
         frame.repaint();
+    }
+
+    public UsuarioController getUsuarioController() {
+        return this.usuarioController;
     }
 }

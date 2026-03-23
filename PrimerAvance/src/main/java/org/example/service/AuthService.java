@@ -13,7 +13,6 @@ public class AuthService {
 
     // LOGIN
     public Usuario login(String username, String password) {
-
         Usuario usuario = usuarioDAO.buscarPorUsername(username);
 
         if (usuario == null) {
@@ -27,7 +26,7 @@ public class AuthService {
         return usuario;
     }
 
-    // RECUPERAR CONTRASEÑA
+    // RECUPERAR CONTRASEÑA (en AuthService.java)
     public void recuperarPassword(String username, String nuevaPassword) {
 
         Usuario usuario = usuarioDAO.buscarPorUsername(username);
@@ -36,6 +35,10 @@ public class AuthService {
             throw new IllegalArgumentException("Usuario no encontrado");
         }
 
+        // 1. Cambias la contraseña en el objeto (en memoria)
         usuario.cambiarPassword(nuevaPassword);
+
+        // 2. ¡NUEVO! Guardas el cambio físicamente en la Base de Datos
+        usuarioDAO.actualizarPassword(usuario);
     }
 }
