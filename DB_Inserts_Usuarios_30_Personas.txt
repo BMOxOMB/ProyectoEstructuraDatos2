@@ -58,3 +58,9 @@ INSERT INTO amistades (usuario_origen, usuario_destino) VALUES
 ('pedro_p', 'kattia_j'), -- Une Azul con Rojo
 ('raul_g', 'oscar_u'),  -- Une Verde con Rojo
 ('ana_v', 'moni_f');    -- Puente extra
+
+
+-- Inserción de intereses sugeridos para la red social
+INSERT INTO catalogo_intereses (nombre_interes) VALUES 
+('Programación'), ('Videojuegos'), ('Música'), ('Deportes'), 
+('Cine'), ('Lectura'), ('Viajes'), ('Tecnología'), ('Cocina');

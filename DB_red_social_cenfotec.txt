@@ -3,7 +3,7 @@ CREATE DATABASE IF NOT EXISTS red_social_cenfotec;
 USE red_social_cenfotec;
 
 -- 2. Tabla de Usuarios
--- Almacena los datos básicos, el avatar y el grupo (Requisito 2 de la consigna)
+-- Almacena datos básicos y visuales del nodo
 CREATE TABLE IF NOT EXISTS usuarios (
     username VARCHAR(50) PRIMARY KEY,
     password VARCHAR(255) NOT NULL,
@@ -13,11 +13,11 @@ CREATE TABLE IF NOT EXISTS usuarios (
     fecha_nacimiento DATE NOT NULL,
     avatar VARCHAR(100) DEFAULT 'default.png',
     nombre_grupo VARCHAR(50) DEFAULT 'Ninguno',
-    color_grupo VARCHAR(7) DEFAULT '#FFFFFF' -- Formato Hexadecimal para Java Color.decode()
+    color_grupo VARCHAR(7) DEFAULT '#FFFFFF'
 );
 
--- 3. Tabla de Amistades (Representación de las Aristas del Grafo)
--- Representa la relación Muchos a Muchos entre usuarios.
+-- 3. Tabla de Amistades (Aristas del Grafo)
+-- Define las conexiones jerárquicas que vemos en la vista de árbol
 CREATE TABLE IF NOT EXISTS amistades (
     usuario_origen VARCHAR(50),
     usuario_destino VARCHAR(50),
@@ -27,10 +27,19 @@ CREATE TABLE IF NOT EXISTS amistades (
     FOREIGN KEY (usuario_destino) REFERENCES usuarios(username) ON DELETE CASCADE
 );
 
--- 4. Tabla de Intereses
-CREATE TABLE IF NOT EXISTS intereses (
+-- 4. Catálogo Maestro de Intereses
+-- Aquí guardas las opciones que aparecerán en el ComboBox o Listado de Java
+CREATE TABLE IF NOT EXISTS catalogo_intereses (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_interes VARCHAR(100) UNIQUE NOT NULL
+);
+
+-- 5. Relación Usuario-Interés
+-- Esta tabla une a los usuarios con los intereses del catálogo
+CREATE TABLE IF NOT EXISTS usuario_intereses (
     username VARCHAR(50),
-    interes VARCHAR(100),
-    FOREIGN KEY (username) REFERENCES usuarios(username) ON DELETE CASCADE
+    interes_id INT,
+    PRIMARY KEY (username, interes_id),
+    FOREIGN KEY (username) REFERENCES usuarios(username) ON DELETE CASCADE,
+    FOREIGN KEY (interes_id) REFERENCES catalogo_intereses(id) ON DELETE CASCADE
 );
