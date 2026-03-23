@@ -46,11 +46,23 @@ public class LoginView extends JPanel {
             }
 
             try {
-                Usuario u = controller.login(user, pass);
-                JOptionPane.showMessageDialog(this, "✅ Bienvenido " + u.getNombreCompleto());
-                nav.goToDashboard(); // Navegación centralizada
+                // 1. Autenticar
+                Usuario logueado = controller.login(user, pass);
+
+                // 2. CARGA DINÁMICA DEL GRAFO
+                // Pide al DAO todos los usuarios y amistades
+                // Si no tienes acceso al DAO aquí, el NavigationManager debería tener un método 'cargarDatos'
+                nav.setUsuarioLogueado(logueado); // Guardar quién entró
+                nav.prepararGrafo(); // Método que vamos a crear en el Manager
+
+                JOptionPane.showMessageDialog(this, "✅ Bienvenido " + logueado.getNombreCompleto());
+
+                // 3. Ahora sí, ir al Dashboard con el grafo ya lleno
+                nav.goToDashboard();
+
             } catch (Exception ex) {
                 mensaje.setText("❌ " + ex.getMessage());
+                ex.printStackTrace(); // Para ver errores de SQL en consola
             }
         });
 

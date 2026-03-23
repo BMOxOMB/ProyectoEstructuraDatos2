@@ -6,22 +6,24 @@ import java.sql.SQLException;
 
 public class ConexionDB {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/nombre_tu_bd?serverTimezone=UTC";
+    private static final String URL = "jdbc:mysql://localhost:3306/red_social_cenfotec?serverTimezone=UTC";
     private static final String USER = "root";
-    private static final String PASS = "tu_password";
+    private static final String PASS = "!Q02w12e22r";
 
     private static Connection conexion = null;
 
     public static Connection getConexion() {
         try {
             if (conexion == null || conexion.isClosed()) {
-                // Cargar el driver (Opcional en versiones nuevas de JDK, pero recomendado)
+                // Esto cargará la librería que tienes en el pom.xml
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 conexion = DriverManager.getConnection(URL, USER, PASS);
-                System.out.println("✅ Conexión exitosa a MySQL");
             }
-        } catch (ClassNotFoundException | SQLException e) {
-            System.err.println("❌ Error de conexión: " + e.getMessage());
+        } catch (Exception e) {
+            // ESTO ES LO IMPORTANTE: Mira tu consola de salida
+            System.out.println("--- ERROR DE CONEXIÓN DETECTADO ---");
+            e.printStackTrace();
+            System.out.println("-----------------------------------");
         }
         return conexion;
     }

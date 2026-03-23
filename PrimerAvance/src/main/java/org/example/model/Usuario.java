@@ -77,6 +77,16 @@ public class Usuario {
         this.colorGrupo = color;
     }
 
+    public void setIntereses(List<String> intereses) {
+        this.intereses = intereses;
+    }
+
+    public void removeInteres(String interes) {
+        if (this.intereses != null) {
+            this.intereses.remove(interes);
+        }
+    }
+
     public List<String> getIntereses() { return intereses; }
     public void addInteres(String interes) { intereses.add(interes); }
 
